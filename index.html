@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>365 Days With You ❤️</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #0a0b10;
+      --accent-rose: #f43f5e;
+      --accent-pink: #ec4899;
+      --accent-violet: #8b5cf6;
+    }
+    
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      overflow-x: hidden;
+      touch-action: manipulation;
+    }
+
+    .font-serif-luxury {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+
+    /* Ambient dynamic glow spots */
+    .glow-spot {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(100px);
+      pointer-events: none;
+      opacity: 0.45;
+      animation: float-glow 14s ease-in-out infinite alternate;
+    }
+
+    @keyframes float-glow {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(40px, -30px) scale(1.15); }
+      100% { transform: translate(-30px, 40px) scale(0.9); }
+    }
+
+    /* Heart Pulse & Glow */
+    .heart-glow {
+      filter: drop-shadow(0 0 25px rgba(244, 63, 94, 0.75)) drop-shadow(0 0 65px rgba(236, 72, 153, 0.4));
+      animation: heart-beat 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      cursor: pointer;
+      transform-origin: center;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .heart-glow:hover {
+      transform: scale(1.08);
+      filter: drop-shadow(0 0 35px rgba(244, 63, 94, 0.95)) drop-shadow(0 0 90px rgba(236, 72, 153, 0.65));
+    }
+    .heart-glow:active {
+      transform: scale(0.95);
+    }
+
+    @keyframes heart-beat {
+      0% { transform: scale(1); }
+      14% { transform: scale(1.12); }
+      28% { transform: scale(1.02); }
+      42% { transform: scale(1.18); }
+      70% { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+
+    /* Glassmorphism styling */
+    .glass-card {
+      background: rgba(18, 20, 29, 0.78);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 40px -10px rgba(244, 63, 94, 0.18);
+    }
+
+    /* Canvas background layer */
+    #particle-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Custom smooth scrollbar */
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(244, 63, 94, 0.3);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100 flex flex-col items-center justify-center p-4 relative select-none">
+
+  <!-- Background Particle Canvas -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- Ambient Blurred Lights -->
+  <div class="glow-spot w-72 h-72 sm:w-96 sm:h-96 bg-rose-600/30 top-10 -left-10"></div>
+  <div class="glow-spot w-80 h-80 sm:w-[32rem] sm:h-[32rem] bg-purple-700/25 bottom-10 -right-10" style="animation-delay: -5s;"></div>
+  <div class="glow-spot w-64 h-64 bg-pink-500/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style="animation-delay: -2s;"></div>
+
+  <!-- Audio Toggle Top Right -->
+  <button id="soundToggle" class="fixed top-5 right-5 z-40 px-3.5 py-2 rounded-full glass-card text-xs sm:text-sm font-medium tracking-wide flex items-center space-x-2 text-rose-300 hover:text-white transition duration-300 border border-white/10 hover:border-rose-500/50">
+    <span id="soundIcon">🔊</span>
+    <span id="soundText">Sound ON</span>
+  </button>
+
+  <!-- ================= INITIAL STATE: INTERACTIVE HEART ================= -->
+  <main id="heartView" class="relative z-10 flex flex-col items-center justify-center text-center max-w-sm sm:max-w-md w-full transition-all duration-700">
+    
+    <div class="mb-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-rose-500/30 bg-rose-500/10 text-rose-300 text-xs tracking-widest uppercase font-medium backdrop-blur-sm">
+      <span class="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping"></span>
+      Special Midnight Delivery
+    </div>
+
+    <h1 class="font-serif-luxury text-3xl sm:text-5xl font-bold tracking-tight text-white/95 mb-1">
+      One Whole Year
+    </h1>
+    <p class="text-xs sm:text-sm text-slate-400 mb-8 sm:mb-12 font-light">
+      I made something just for you. Tap the heart to open.
+    </p>
+
+    <!-- Glowing Heart Button -->
+    <div id="heartTrigger" class="relative group p-6 focus:outline-none focus:ring-0">
+      <!-- Glow aura rings -->
+      <div class="absolute inset-0 rounded-full bg-rose-500/20 filter blur-xl group-hover:bg-rose-500/30 transition duration-500"></div>
+      
+      <svg class="heart-glow w-28 h-28 sm:w-36 sm:h-36 mx-auto cursor-pointer" viewBox="0 0 24 24" fill="url(#roseGrad)" stroke="none">
+        <defs>
+          <linearGradient id="roseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#fb7185" />
+            <stop offset="50%" stop-color="#f43f5e" />
+            <stop offset="100%" stop-color="#be123c" />
+          </linearGradient>
+        </defs>
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+
+      <!-- Pulsing prompt pill -->
+      <div class="mt-6 flex items-center justify-center gap-1.5 text-xs text-rose-300/80 uppercase tracking-widest font-semibold group-hover:text-rose-200 transition">
+        <span>Tap To Open</span>
+        <svg class="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Small footer timestamp note -->
+    <p class="text-[11px] text-slate-500 mt-8 tracking-wide">365 Days • 8,760 Hours • Infinite Memories</p>
+  </main>
+
+  <!-- ================= REVEALED STATE: ELEGANT LETTER ================= -->
+  <section id="letterView" class="hidden relative z-20 w-full max-w-xl mx-auto opacity-0 scale-95 transition-all duration-700 ease-out">
+    
+    <div class="glass-card rounded-2xl sm:rounded-3xl p-6 sm:p-10 border border-white/10 relative overflow-hidden">
+      
+      <!-- Subtle top decorative ribbon -->
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-rose-500 to-transparent"></div>
+
+      <!-- Letter Header -->
+      <div class="flex items-start justify-between border-b border-white/10 pb-5 mb-6">
+        <div>
+          <span class="text-[10px] tracking-widest uppercase font-semibold text-rose-400 bg-rose-500/10 px-2.5 py-1 rounded-full border border-rose-500/20">
+            For Lovikka ❤️
+          </span>
+          <h2 class="font-serif-luxury text-2xl sm:text-3xl font-bold text-white mt-2">
+            365 Days of Us
+          </h2>
+        </div>
+        <button id="closeLetterBtn" title="Close note" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Live Counter Badge -->
+      <div class="mb-6 p-3.5 rounded-xl bg-black/40 border border-rose-500/20 text-center">
+        <p class="text-[11px] uppercase tracking-wider text-slate-400 mb-1 font-medium">We've Been Together For</p>
+        <div id="counterText" class="font-mono text-sm sm:text-base font-semibold text-rose-300">
+          Calculating our time...
+        </div>
+      </div>
+
+      <!-- Letter Content (Exact message preserved) -->
+      <div class="custom-scroll max-h-[46vh] sm:max-h-[50vh] overflow-y-auto pr-2 space-y-4 text-sm sm:text-base leading-relaxed text-slate-200 font-light">
+        <p class="font-medium text-rose-300">
+          hi my dearest lovikka,
+        </p>
+        
+        <p>
+          it is finally one year of us being together i say finally even tho this felt like the shortest one year because u gave me what i wanted which was stabiloty and calmness in my lofe which led to a very stable and good relationship and everyday life u have been the most important person in my life since the day we started dating cuz i knew i wanted to be with you forever because we just fit in together so perfectly and we had our bad times but u know jitna we had is like less than half of the arguments niggas be having in their relationship well thats also because they just dont love each other and are aise bhi just ready to leave whenever but we were never like that and we knew we wanted to stay together for our whole lifetimes and even the ones thatll comne after this one so i hop we can stay together forever till our souls are alive cuz the body dies soul doesnt so that's tuff
+        </p>
+
+        <div class="pt-5 border-t border-white/5 flex flex-col items-end text-right">
+          <p class="font-serif-luxury italic text-xl text-rose-300">yours always,</p>
+          <p class="text-sm font-semibold text-white tracking-wide mt-0.5">soni moni</p>
+        </div>
+      </div>
+
+      <!-- Action Buttons Row -->
+      <div class="mt-6 pt-5 border-t border-white/10 flex flex-col sm:flex-row gap-3 items-center justify-between">
+        <button id="replayBurstsBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold tracking-wide transition shadow-lg shadow-rose-600/30 flex items-center justify-center gap-2">
+          <span>Shower More Hearts ✨</span>
+        </button>
+        <button id="lockBackBtn" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-medium tracking-wide transition border border-white/5">
+          Lock It Back Up
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    /* =================================================================
+       1. RELATIONSHIP START DATE
+       Start: October 28, 2025 at midnight (Anniversary: October 28, 2026)
+       Month index 9 = October (0-indexed in JS)
+    ================================================================= */
+    const relationshipStartDate = new Date(2025, 9, 28, 0, 0, 0);
+
+    function updateLiveCounter() {
+      const now = new Date();
+      const diff = Math.max(0, now - relationshipStartDate);
+
+      const seconds = Math.floor((diff / 1000) % 60);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+      const counterEl = document.getElementById('counterText');
+      if (counterEl) {
+        counterEl.innerHTML = `
+          <span class="text-white">${days}</span>d 
+          <span class="text-white">${hours}</span>h 
+          <span class="text-white">${minutes}</span>m 
+          <span class="text-white">${seconds}</span>s
+        `;
+      }
+    }
+    setInterval(updateLiveCounter, 1000);
+    updateLiveCounter();
+
+    /* =================================================================
+       2. WEB AUDIO API SYNTHESIZER (ZERO EXTERNAL AUDIO FILES NEEDED)
+    ================================================================= */
+    let audioContext = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioContext) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) audioContext = new AudioCtx();
+      }
+      if (audioContext && audioContext.state === 'suspended') {
+        audioContext.resume();
+      }
+    }
+
+    // Play sparkling chime sound
+    function playSparkleSound() {
+      if (!soundEnabled || !audioContext) return;
+      
+      const freqs = [523.25, 659.25, 783.99, 1046.50, 1318.51]; // C5, E5, G5, C6, E6
+      const now = audioContext.currentTime;
+      
+      freqs.forEach((freq, idx) => {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+
+        gain.gain.setValueAtTime(0, now + idx * 0.08);
+        gain.gain.linearRampToValueAtTime(0.12, now + idx * 0.08 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.9);
+
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+
+        osc.start(now + idx * 0.08);
+        osc.stop(now + idx * 0.08 + 1.0);
+      });
+    }
+
+    // Sound toggle control
+    const soundToggle = document.getElementById('soundToggle');
+    soundToggle.addEventListener('click', () => {
+      initAudio();
+      soundEnabled = !soundEnabled;
+      document.getElementById('soundIcon').innerText = soundEnabled ? '🔊' : '🔇';
+      document.getElementById('soundText').innerText = soundEnabled ? 'Sound ON' : 'Muted';
+    });
+
+    /* =================================================================
+       3. BACKGROUND CANVAS PARTICLES & CONFETTI BURST
+    ================================================================= */
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+    let bursts = [];
+
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class AmbientParticle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedY = -(Math.random() * 0.4 + 0.1);
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.opacity = Math.random() * 0.5 + 0.1;
+      }
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        if (this.y < 0) this.y = height;
+        if (this.x < 0) this.x = width;
+        if (this.x > width) this.x = 0;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 200, 220, ${this.opacity})`;
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = '#f43f5e';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    class BurstHeart {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 5 + 2;
+        this.vx = Math.cos(angle) * speed;
+        this.vy = Math.sin(angle) * speed - 2.5; // Upward bias
+        this.gravity = 0.08;
+        this.size = Math.random() * 14 + 10;
+        this.opacity = 1;
+        this.rotation = Math.random() * Math.PI * 2;
+        this.rotSpeed = (Math.random() - 0.5) * 0.08;
+        const colors = ['#f43f5e', '#fb7185', '#ec4899', '#f472b6', '#ffffff'];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += this.gravity;
+        this.vx *= 0.98;
+        this.rotation += this.rotSpeed;
+        this.opacity -= 0.012;
+      }
+      draw() {
+        if (this.opacity <= 0) return;
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        ctx.globalAlpha = Math.max(0, this.opacity);
+        ctx.fillStyle = this.color;
+        
+        // Draw Heart Shape
+        ctx.beginPath();
+        const topCurveHeight = this.size * 0.3;
+        ctx.moveTo(0, topCurveHeight);
+        ctx.bezierCurveTo(0, 0, -this.size / 2, 0, -this.size / 2, topCurveHeight);
+        ctx.bezierCurveTo(-this.size / 2, (this.size + topCurveHeight) / 2, 0, this.size, 0, this.size);
+        ctx.bezierCurveTo(0, this.size, this.size / 2, (this.size + topCurveHeight) / 2, this.size / 2, topCurveHeight);
+        ctx.bezierCurveTo(this.size / 2, 0, 0, 0, 0, topCurveHeight);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Populate ambient particles
+    for (let i = 0; i < 45; i++) {
+      particles.push(new AmbientParticle());
+    }
+
+    function createHeartBurst(originX, originY, count = 40) {
+      for (let i = 0; i < count; i++) {
+        bursts.push(new BurstHeart(originX, originY));
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Render background floating dust
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+
+      // Render heart bursts
+      for (let i = bursts.length - 1; i >= 0; i--) {
+        const b = bursts[i];
+        b.update();
+        b.draw();
+        if (b.opacity <= 0) bursts.splice(i, 1);
+      }
+
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    /* =================================================================
+       4. INTERACTION & VIEW TRANSITIONS
+    ================================================================= */
+    const heartView = document.getElementById('heartView');
+    const letterView = document.getElementById('letterView');
+    const heartTrigger = document.getElementById('heartTrigger');
+    const closeLetterBtn = document.getElementById('closeLetterBtn');
+    const lockBackBtn = document.getElementById('lockBackBtn');
+    const replayBurstsBtn = document.getElementById('replayBurstsBtn');
+
+    function openLoveLetter(e) {
+      initAudio();
+      playSparkleSound();
+
+      // Trigger burst at heart coordinates
+      const rect = heartTrigger.getBoundingClientRect();
+      const originX = rect.left + rect.width / 2;
+      const originY = rect.top + rect.height / 2;
+      createHeartBurst(originX, originY, 65);
+
+      // Animate heart out
+      heartView.classList.add('opacity-0', 'scale-90', 'pointer-events-none');
+      
+      setTimeout(() => {
+        heartView.classList.add('hidden');
+        letterView.classList.remove('hidden');
+        
+        // Force reflow
+        void letterView.offsetWidth;
+
+        letterView.classList.remove('opacity-0', 'scale-95');
+        letterView.classList.add('opacity-100', 'scale-100');
+      }, 350);
+    }
+
+    function closeLoveLetter() {
+      letterView.classList.remove('opacity-100', 'scale-100');
+      letterView.classList.add('opacity-0', 'scale-95');
+
+      setTimeout(() => {
+        letterView.classList.add('hidden');
+        heartView.classList.remove('hidden', 'pointer-events-none');
+        
+        void heartView.offsetWidth;
+
+        heartView.classList.remove('opacity-0', 'scale-90');
+        heartView.classList.add('opacity-100', 'scale-100');
+      }, 400);
+    }
+
+    heartTrigger.addEventListener('click', openLoveLetter);
+    closeLetterBtn.addEventListener('click', closeLoveLetter);
+    lockBackBtn.addEventListener('click', closeLoveLetter);
+
+    replayBurstsBtn.addEventListener('click', (e) => {
+      initAudio();
+      playSparkleSound();
+      const rect = replayBurstsBtn.getBoundingClientRect();
+      createHeartBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 50);
+    });
+  </script>
+</body>
+</html>
